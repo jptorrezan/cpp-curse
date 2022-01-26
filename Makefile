@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = particles/main.cpp particles/Screen.cpp particles/Particle.cpp particles/Swarm.cpp 
+OBJS = main.cpp src/Screen.cpp src/Particle.cpp src/Swarm.cpp 
 
 #CC specifies which compiler we're using
 CC = g++

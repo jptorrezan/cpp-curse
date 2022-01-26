@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "Screen.h"
-#include "Swarm.h"
+#include "src/Screen.h"
+#include "src/Swarm.h"
 
 using namespace std;
 
