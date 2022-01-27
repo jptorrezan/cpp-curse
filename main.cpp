@@ -26,8 +26,6 @@ int main(){
     
     Swarm swarm;
 
-    int max = 0;
-    int oldmax = max;
     bool quit = false;
     while(!quit){
         int elapsedTime = SDL_GetTicks();
@@ -41,6 +39,7 @@ int main(){
 
         const Particle * const pParticles = swarm.getPaticles();
         int x, y;
+        swarm.update();
         for(int i = 0; i < Swarm::N_PARTICLES; i++){
             Particle particle = pParticles[i];
             x = (particle.m_x + 1)*Screen::SCREEN_WIDTH/2;
@@ -49,6 +48,7 @@ int main(){
             screen.setPixel(x, y, red,green,blue);
         }
         screen.update();
+        screen.clear();
         if(!screen.processEvents()){
             break;
         }

@@ -90,4 +90,8 @@ void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue){
     m_pixelsBuffer[(y*SCREEN_WIDTH) + x] = color;
 }
 
+void Screen::clear(){
+    memset(m_pixelsBuffer, 0, SCREEN_WIDTH*SCREEN_HEIGHT*sizeof(Uint32));
+}
+
 
