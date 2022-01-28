@@ -5,15 +5,16 @@
 
 class Swarm{
 public:
-    const static int N_PARTICLES = 1000;
+    const static int N_PARTICLES = 5000;
 private:
    Particle* m_pParticles;
+   int lastTime;
 
 public:
     Swarm();
     virtual ~Swarm();
     const Particle* const getPaticles(){ return m_pParticles; }
-    void update();
+    void update(int elapsed_time);
 
 };
 

@@ -37,8 +37,12 @@ bool Screen::init(){
         return false;
     }
 
-   m_pixelsBuffer = new Uint32[SCREEN_HEIGHT * SCREEN_WIDTH];
+    m_pixelsBuffer = new Uint32[SCREEN_HEIGHT * SCREEN_WIDTH];
+    m_pixelsBufferBlured = new Uint32[SCREEN_HEIGHT * SCREEN_WIDTH];
+
     memset(m_pixelsBuffer, 0, SCREEN_WIDTH*SCREEN_HEIGHT*sizeof(Uint32));
+    memset(m_pixelsBufferBlured, 0, SCREEN_WIDTH*SCREEN_HEIGHT*sizeof(Uint32));
+    
     for(int i = 0; i < SCREEN_WIDTH*SCREEN_HEIGHT; i++){
         m_pixelsBuffer[i] = 0 ;
     }
@@ -49,6 +53,7 @@ bool Screen::init(){
 
 void Screen::close(){
     delete [] m_pixelsBuffer;
+    delete [] m_pixelsBufferBlured;
     SDL_DestroyTexture(m_texture);
     SDL_DestroyWindow(m_window);
     SDL_Quit();
@@ -72,6 +77,51 @@ void Screen::update(){
     }
 }
 
+
+//boxBlur:  take the pixels that envolves the target pixel then make the average of theirs colors and put it in the target
+//          bluring the pixel
+
+void Screen::boxBlur(){
+    //swap buffers, so pixel is in bufferBlured and we will draw in the normal buffer 
+    Uint32* temp = m_pixelsBuffer ;
+    m_pixelsBuffer = m_pixelsBufferBlured;
+    m_pixelsBufferBlured = temp;
+    
+    for(int y = 0; y < Screen::SCREEN_HEIGHT; y++){
+        for(int x = 0; x < Screen::SCREEN_WIDTH ; x++){
+
+            int redTotal = 0;
+            int greenTotal = 0;
+            int blueTotal = 0;
+            
+            for(int row = -1; row <=1; row++){
+                for(int col = -1; col <= 1; col++){
+                    int currentX = x + col;
+                    int currentY = y + row;
+
+                    if(currentX >= 0 && currentX < SCREEN_WIDTH && currentY >= 0 && currentY < SCREEN_HEIGHT ){
+                        Uint32 color = m_pixelsBufferBlured[currentY*SCREEN_WIDTH + currentX];
+                        Uint8 red = color >> 24 ; 
+                        Uint8 green = color >> 16 ;
+                        Uint8 blue = color >> 8 ;
+                        redTotal += red;
+                        greenTotal += green;
+                        blueTotal += blue;
+                    }
+
+                }
+            }
+
+            Uint8 red = redTotal/9;
+            Uint8 green = greenTotal/9;
+            Uint8 blue = blueTotal/9;
+            setPixel(x, y, red, green, blue );
+        }
+    }
+
+
+}
+
 void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue){
     if(x < 0 || x >= SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT){
         return;
@@ -90,8 +140,13 @@ void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue){
     m_pixelsBuffer[(y*SCREEN_WIDTH) + x] = color;
 }
 
+
+
+
+
+/*
 void Screen::clear(){
     memset(m_pixelsBuffer, 0, SCREEN_WIDTH*SCREEN_HEIGHT*sizeof(Uint32));
+    memset(m_pixelsBufferBlured, 0, SCREEN_WIDTH*SCREEN_HEIGHT*sizeof(Uint32));
 }
-
-
+*/

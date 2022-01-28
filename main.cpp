@@ -39,16 +39,21 @@ int main(){
 
         const Particle * const pParticles = swarm.getPaticles();
         int x, y;
-        swarm.update();
+
+        swarm.update(elapsedTime);
+
         for(int i = 0; i < Swarm::N_PARTICLES; i++){
             Particle particle = pParticles[i];
             x = (particle.m_x + 1)*Screen::SCREEN_WIDTH/2;
-            y = (particle.m_y + 1)*Screen::SCREEN_HEIGHT/2;
+            y = (particle.m_y)*Screen::SCREEN_WIDTH/2 + Screen::SCREEN_HEIGHT/2;
 
             screen.setPixel(x, y, red,green,blue);
         }
+
+        screen.boxBlur();
+
         screen.update();
-        screen.clear();
+
         if(!screen.processEvents()){
             break;
         }
